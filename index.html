@@ -1,0 +1,150 @@
+<!-- index.html (IMAGE → VIDEO SCREEN) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Video Screen</title>
+<style>
+  :root {
+    color-scheme: dark;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+      radial-gradient(circle at 50% 16%, rgba(92, 105, 138, 0.22), transparent 26%),
+      radial-gradient(circle at 50% 78%, rgba(16, 22, 35, 0.58), transparent 34%),
+      linear-gradient(180deg, #161b27 0%, #0d1018 52%, #06080d 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+    overflow: hidden;
+    font-family: "Segoe UI", "Trebuchet MS", sans-serif;
+  }
+
+  body::before,
+  body::after {
+    content: "";
+    position: fixed;
+    inset: -10%;
+    pointer-events: none;
+  }
+
+  body::before {
+    background:
+      radial-gradient(circle at 50% 10%, rgba(255, 255, 255, 0.1), transparent 28%),
+      radial-gradient(circle at 50% 82%, rgba(255, 255, 255, 0.05), transparent 34%);
+    filter: blur(18px);
+  }
+
+  body::after {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 4px 4px;
+    opacity: 0.12;
+  }
+
+  .frame {
+    width: min(1200px, 100%);
+    padding: 20px;
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background:
+      linear-gradient(180deg, rgba(33, 41, 60, 0.64), rgba(17, 22, 34, 0.66));
+    box-shadow:
+      0 26px 78px rgba(0, 0, 0, 0.54),
+      inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(18px);
+    position: relative;
+    z-index: 1;
+    isolation: isolate;
+    overflow: hidden;
+  }
+
+  .frame::before,
+  .frame::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .frame::before {
+    background:
+      radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.12), transparent 24%),
+      radial-gradient(circle at 12% 50%, rgba(140, 170, 210, 0.12), transparent 18%),
+      radial-gradient(circle at 88% 52%, rgba(140, 170, 210, 0.12), transparent 18%);
+    mix-blend-mode: screen;
+    opacity: 0.9;
+  }
+
+  .frame::after {
+    inset: 10px;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.05),
+      inset 0 -16px 30px rgba(0, 0, 0, 0.16);
+  }
+
+  video {
+    display: block;
+    width: 100%;
+    max-height: calc(100vh - 72px);
+    object-fit: contain;
+    border-radius: 14px;
+    box-shadow:
+      0 18px 50px rgba(0, 0, 0, 0.45),
+      0 0 0 1px rgba(255, 255, 255, 0.03);
+  }
+</style>
+</head>
+<body>
+
+<div class="frame">
+  <video id="videoPlayer" autoplay muted loop playsinline></video>
+</div>
+
+<script>
+  const videoPlayer = document.getElementById('videoPlayer');
+
+  // 5 states from Tech → Nature
+  const videos = {
+    '0': 'videos/10_90_video.mp4', // 90 tech / 10 nature
+    '1': 'videos/30_70_video.mp4', // 70 tech / 30 nature
+    '2': 'videos/50_50_video.mp4', // 50 tech / 50 nature
+    '3': 'videos/70_30_video.mp4', // 30 tech / 70 nature
+    '4': 'videos/90_10_video.mp4'  // 10 tech / 90 nature
+  };
+
+  function updateVideo() {
+    const value = localStorage.getItem('mix') || '0';
+    const src = videos[value];
+    const currentSrc = videoPlayer.getAttribute('src');
+
+    if (currentSrc !== src) {
+      videoPlayer.src = src;
+      videoPlayer.play();
+    }
+  }
+
+  // Listen for updates from controls window
+  window.addEventListener('storage', updateVideo);
+
+  // Initial load
+  updateVideo();
+
+  // Open controls window
+  window.open("controls.html", "controls", "width=400,height=300");
+</script>
+
+</body>
+</html>
